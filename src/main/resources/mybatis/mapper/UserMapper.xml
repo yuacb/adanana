@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adanana.dao.UserDao">
+
+    <resultMap id="userResultMap" type="User">
+        <id property="id" column="id" />
+        <result property="userLoginName" column="user_login_name"/>
+        <result property="userNickname" column="user_nickname"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="registeredTime" column="registered_time"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="userResultMap">
+        select * from user
+    </select>
+
+    <select id="findById" resultMap="userResultMap" parameterType="Long">
+        select * from user where user.id = #{id}
+    </select>
+
+    <select id="userLogin" resultMap="userResultMap" parameterType="com.adanana.model.User">
+        select * from user where user.user_login_name = #{userLoginName} and user.password = #{password}
+    </select>
+
+    <insert id="insert" parameterType="com.adanana.model.User">
+        INSERT INTO `adanana`.`user`
+        (
+        `user_login_name`,
+        `user_nickname`,
+        `password`,
+        `email`,
+        `registered_time`)
+        VALUES
+        (#{userLoginName},#{userNickname},#{password},#{email},#{registeredTime});
+    </insert>
+</mapper>
