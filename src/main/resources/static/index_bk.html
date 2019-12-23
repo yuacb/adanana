@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>不吃水煮蛋</title>
+    <!-- bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <!-- bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"
+            integrity="sha384-L2pyEeut/H3mtgCBaUNw7KWzp5n9+4pDQiExs933/5QfaTh8YStYFFkOzSoXjlTb"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <!-- VUE -->
+    <script src="js/vue/vue.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <!-- 富文本 -->
+    <!-- <script src="https://cdn.bootcss.com/vue/2.6.10/vue.common.dev.js"></script>-->
+</head>
+<body style="height: 600px;">
+<nav id="navigate" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">不爱吃水煮蛋</li>
+        <li class="breadcrumb-item"><a href="#" data-toggle="modal" data-target="#login">登陆</a></li>
+        <li class="breadcrumb-item active"><a href="#" data-toggle="modal" data-target="#register">注册</a></li>
+    </ol>
+</nav>
+<div class="container-fluid" style="min-height: 600px;" id="editor">
+    ...是的..没卡..什么也没有
+    <div class="row">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">留言板</span>
+            </div>
+            <textarea class="form-control" aria-label="With textarea" placeholder="就不要写太多了，意思下就行了....."></textarea>
+            <button type="button" class="btn btn-primary">提交</button>
+        </div>
+    </div>
+
+    <hr/>
+    <div>
+        <H2>假装是个《更新日志》</H2>
+        <span>想了想，复杂页面就以后再说吧......</span>
+        <H3>下一次更新</H3>
+        <ul>
+            <li>HTTPS</li>
+            <li>正常的用户</li>
+            <li>简单权限</li>
+            <li>完善redis</li>
+        </ul>
+        ————————————————————————————————————————————
+        <H3>十二月一日</H3>
+        <ul>
+            <li>加了redis</li>
+            <li>注册登陆</li>
+            <li>留言</li>
+        </ul>
+    </div>
+</div>
+</body>
+<hr/>
+<footer>
+    <div style="width:300px;margin:0 auto; padding:20px 0;">
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010402004038" style="display:inline-block;
+        text-decoration:none;height:20px;line-height:20px;">
+            <img src="/static/img/beian.png" style="float:left;"/>
+            <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">浙公网安备
+                33010402004038号</p></a>
+        <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">
+            <a target="_blank" href="http://www.beian.miit.gov.cn/" style="display:inline-block;  text-decoration:none;height:20px;line-height:20px;"
+                >浙ICP备19047505号</a>
+        </p>
+
+    </div>
+
+</footer>
+</html>
+<!-- 注册 模态框 -->
+<div class="modal fade" id="register">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">新用户注册</h4>
+                <font style="size: 50px"> (暂时不是那么安全，所以密码随便输入..) </font>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="userLoginName">用户名:</label>
+                        <input type="text" class="form-control" v-model="userLoginName" id="userLoginName">
+                    </div>
+                    <div class="form-group">
+                        <label for="userNickname">昵称:</label>
+                        <input type="text" class="form-control" v-model="userNickname" id="userNickname">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码:</label>
+                        <input type="password" class="form-control" v-model="password" id="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmpassword">确认密码:</label>
+                        <input type="password" class="form-control" v-model="confirmpassword" id="confirmpassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱:</label>
+                        <input type="password" class="form-control" v-model="email" id="email">
+                    </div>
+                </form>
+            </div>
+
+            <!-- 模态框底部 btn-primary-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" v-on:click="fx_register">注册</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 登陆 模态框 -->
+<div class="modal fade" id="login">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">用户登陆</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="login_user_name">用户名:</label>
+                        <input type="text" class="form-control" v-model="loginUserName" id="login_user_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="login_password">密码:</label>
+                        <input type="password" class="form-control" v-model="loginPassword" id="login_password">
+                    </div>
+                </form>
+            </div>
+
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" v-on:click="fx_login">登陆</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="js/app/app.js" type="text/javascript" charset="utf-8"></script>

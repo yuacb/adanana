@@ -2,7 +2,7 @@ package com.adanana.model;
 
 import java.io.Serializable;
 import java.util.Date;
-
+//FIXME 感觉还要有个UUID
 public class User implements Serializable {
 
     private Long id;

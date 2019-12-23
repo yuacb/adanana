@@ -1,5 +1,5 @@
-const URL_REQUEST = "http://127.0.0.1:8080/app/";
-
+// const URL_REQUEST = "http://127.0.0.1:8080/app/";
+const URL_REQUEST = " http://www.adanana.com/app/";
 var navigate = new Vue({
     el:"#navigate",
     data:{
