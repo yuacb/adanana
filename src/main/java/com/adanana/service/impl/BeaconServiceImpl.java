@@ -23,7 +23,13 @@ public class BeaconServiceImpl implements BeaconService {
     }
 
     @Override
-    public List<String> find(Beacon beacon) {
+    public List<Beacon> find(Beacon beacon) {
        return beaconDao.find(beacon);
+    }
+
+    @Override
+    public List<Beacon> find() {
+        Beacon beacon = new Beacon();
+        return beaconDao.find(beacon);
     }
 }

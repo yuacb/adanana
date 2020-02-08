@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.List;
  //首页Controller 登陆 & 注册
 // @RestController json 返回
 @Controller
-@CrossOrigin
 public class IndexController extends  BaseController {
      @Autowired
      private StringRedisTemplate stringRedisTemplate;
@@ -44,7 +42,7 @@ public class IndexController extends  BaseController {
       */
      @ResponseBody
      @RequestMapping(value = "/login",method = RequestMethod.POST)
-     public Object login(HttpServletRequest request, User loginUser){
+     public Object login(HttpServletRequest request,@RequestBody User loginUser){
          HttpSession httpSession = request.getSession(true);
          ValueOperations<String, User> operations=redisTemplate.opsForValue();
          User user = userService.userLogin(loginUser);

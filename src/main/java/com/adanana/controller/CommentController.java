@@ -1,11 +1,8 @@
 package com.adanana.controller;
 
 import com.adanana.model.Comment;
-import com.adanana.model.User;
 import com.adanana.service.CommentService;
-import com.adanana.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;

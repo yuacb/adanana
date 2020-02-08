@@ -1,6 +1,7 @@
 package com.adanana.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Beacon {
     private Long id;
@@ -41,5 +42,18 @@ public class Beacon {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Beacon beacon = (Beacon) o;
+        return minor.equals(beacon.minor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(minor);
     }
 }

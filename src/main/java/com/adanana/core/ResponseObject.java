@@ -5,8 +5,9 @@ package com.adanana.core;
  */
 public class ResponseObject {
     //请求失败
-    public static  final  String CODE_FAIL = "T";
+    public static  final  String CODE_FAIL = "F";
     public static  final  String CODE_SUCCESS = "S";
+    public static  final  String NO_LOGIN = "NO_LOGIN";
     private String code;
     private String info;
     private Object content;
@@ -33,6 +34,13 @@ public class ResponseObject {
     public static  ResponseObject fail(String info){
         ResponseObject responseObject = ResponseObject.fail();
         responseObject.setInfo(info);
+        return responseObject;
+    }
+    //未登录
+    public static  ResponseObject noLogin(){
+        ResponseObject responseObject = new ResponseObject();
+        responseObject.setCode(ResponseObject.NO_LOGIN);
+        responseObject.setInfo("未登录");
         return responseObject;
     }
     public String getCode() {

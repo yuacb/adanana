@@ -25,19 +25,21 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        //由于跨域的问题...放行OPTIONS
+        if("OPTIONS".equals(request.getMethod().toUpperCase())) {
+            return true;
+        }
+
         //System.out.println(">>>MyInterceptor1>>>>>>>在请求处理之前进行调用（Controller方法调用之前）");
         //验证session
         String sessionId = request.getSession().getId();
-        //是否已经登陆
-        Boolean hasKey = redisTemplate.hasKey(sessionId);
+        //是否已经登陆 登陆的话会存进redis
+        Boolean hasKey = redisTemplate.hasKey("sessionId@"+sessionId);
         //未登录
         if(!hasKey){
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
-            //response.setContentLength(1);
-            response.getWriter().write(JSON.toJSONString(ResponseObject.fail("未登录")));
-
-            //response.getWriter().print(ResponseObject.fail("未登录"));
+            response.getWriter().write(JSON.toJSONString(ResponseObject.noLogin()));
         }
         return hasKey;
     }
