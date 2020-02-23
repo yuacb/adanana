@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adanana.dao.UserDao">
+<mapper namespace="com.adanana.blog.dao.UserMapper">
 
-    <resultMap id="userResultMap" type="com.adanana.model.User">
+    <resultMap id="userResultMap" type="com.adanana.blog.model.User">
         <id property="id" column="id" />
         <result property="userLoginName" column="user_login_name"/>
         <result property="userNickname" column="user_nickname"/>
@@ -19,11 +19,11 @@
         select * from user where user.id = #{id}
     </select>
 
-    <select id="userLogin" resultMap="userResultMap" parameterType="com.adanana.model.User">
+    <select id="userLogin" resultMap="userResultMap" parameterType="com.adanana.blog.model.User">
         select * from user where user.user_login_name = #{userLoginName} and user.password = #{password}
     </select>
 
-    <insert id="insert" parameterType="com.adanana.model.User">
+    <insert id="insert" parameterType="com.adanana.blog.model.User">
         INSERT INTO `adanana`.`user`
         (
         `user_login_name`,

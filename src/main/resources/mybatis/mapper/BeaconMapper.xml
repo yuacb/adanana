@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adanana.dao.BeaconDao">
+<mapper namespace="com.adanana.blog.dao.BeaconMapper">
 
     <!--
        void insert(Beacon beacon);
@@ -8,19 +8,19 @@
        List<String> find(Beacon beacon);
 
      -->
-    <resultMap id="BeaconResultMap" type="com.adanana.model.Beacon">
+    <resultMap id="BeaconResultMap" type="com.adanana.blog.model.Beacon">
         <id property="id" column="id"/>
         <result property="minor" column="minor"/>
         <result property="createTime" column="create_time"/>
         <result property="type" column="type"/>
     </resultMap>
-    <select id="find" resultMap="BeaconResultMap" parameterType="com.adanana.model.Beacon">
+    <select id="find" resultMap="BeaconResultMap" parameterType="com.adanana.blog.model.Beacon">
         select * from beacon
         <where>
             <if test="type != null and type != '' ">beacon.type = #{type}</if>
         </where>
     </select>
-    <insert id="insert" parameterType="com.adanana.model.Beacon">
+    <insert id="insert" parameterType="com.adanana.blog.model.Beacon">
     INSERT INTO `adanana`.`beacon`
     (`id`,
     `minor`,

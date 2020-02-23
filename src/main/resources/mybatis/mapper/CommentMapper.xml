@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adanana.dao.CommentDao">
+<mapper namespace="com.adanana.blog.dao.CommentMapper">
 
-    <select id="findAll" resultType="com.adanana.model.Comment">
+    <select id="findAll" resultType="com.adanana.blog.model.Comment">
         select * from comment
     </select>
 
-    <insert id="insert" parameterType="com.adanana.model.Comment">
+    <insert id="insert" parameterType="com.adanana.blog.model.Comment">
         INSERT INTO `adanana`.`comment`
         (`id`,
         `content`,
