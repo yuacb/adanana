@@ -11,25 +11,25 @@ import java.util.List;
 @Service(value = "beaconServiceImpl")
 public class BeaconServiceImpl implements BeaconService {
     @Resource
-    private BeaconMapper beaconDao;
+    private BeaconMapper beaconMapper;
     @Override
     public void insert(Beacon beacon) {
-        beaconDao.insert(beacon);
+        beaconMapper.insert(beacon);
     }
 
     @Override
     public void insertBatch(List<String> beaconList) {
-        beaconDao.insertBatch(beaconList);
+        beaconMapper.insertBatch(beaconList);
     }
 
     @Override
     public List<Beacon> find(Beacon beacon) {
-       return beaconDao.find(beacon);
+       return beaconMapper.find(beacon);
     }
 
     @Override
     public List<Beacon> find() {
         Beacon beacon = new Beacon();
-        return beaconDao.find(beacon);
+        return beaconMapper.find(beacon);
     }
 }

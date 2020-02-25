@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adanana.blog.dao.SpiderWeboInfoMapper">
+
+    <insert id="BatchInsert" parameterType="java.util.List">
+        insert into spider_webo_info (
+        `weibo_user_id`,
+        `weibo_user_nick_name`,
+        `weibo_feed_id`,
+        `weibo_content`,
+        `number_forward`,
+        `number_favorite`,
+        `number_repeat`,
+        `number_praised`,
+        `repeat_info`,
+        `feed_time`,
+        `create_time`)
+        values
+        <foreach item="item" collection="list" separator=",">
+            (#{item.weiboUserId},
+             #{item.weiboUserNickName},
+             #{item.weiboFeelId},
+             #{item.weiboContent},
+             #{item.numberForward},
+             #{item.numberFavorite},
+             #{item.numberRepeat},
+             #{item.numberPraised},
+             #{item.repeatInfo},
+             #{item.feedTime},
+             #{item.createTime},)
+        </foreach>
+    </insert>
+
+
+</mapper>

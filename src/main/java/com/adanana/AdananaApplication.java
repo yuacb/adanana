@@ -7,10 +7,13 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer; 
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 @ServletComponentScan
-@MapperScan(basePackages = {"com.adanana.dao"})
+@MapperScan(basePackages = {"com.adanana.blog.dao"})
 @SpringBootApplication
 @ComponentScan(value="com.adanana")
+@EnableScheduling
 public class AdananaApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

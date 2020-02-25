@@ -1,4 +1,4 @@
-package com.spider.model;
+package com.adanana.spider.model;
 
 public class SpiderWeiboUserTarget {
     private Long id;

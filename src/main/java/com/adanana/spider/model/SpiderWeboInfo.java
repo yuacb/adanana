@@ -1,15 +1,54 @@
-package com.spider.model;
+package com.adanana.spider.model;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SpiderWeboInfo {
     private Long id;
     private String weiboUserId;
+    private String weiboUserNickName;
+    private String weiboFeelId;
     private String weiboContent;
-    private String spiderWeboInfocol;
+    //private String spiderWeboInfocol;
     private double numberForward;
     private double numberFavorite;
     private double numberRepeat;
     private double numberPraised;
     private String repeatInfo;
+    private Date feedTime;
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getFeedTime() {
+        return feedTime;
+    }
+
+    public void setFeedTime(String feedTime)  {
+        Date date=new Date();
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            date=formatter.parse(feedTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        this.feedTime = date;
+    }
+
+    public String getWeiboUserNickName() {
+        return weiboUserNickName;
+    }
+
+    public void setWeiboUserNickName(String weiboUserNickName) {
+        this.weiboUserNickName = weiboUserNickName;
+    }
 
     public Long getId() {
         return id;
@@ -27,6 +66,14 @@ public class SpiderWeboInfo {
         this.weiboUserId = weiboUserId;
     }
 
+    public String getWeiboFeelId() {
+        return weiboFeelId;
+    }
+
+    public void setWeiboFeelId(String weiboFeelId) {
+        this.weiboFeelId = weiboFeelId;
+    }
+
     public String getWeiboContent() {
         return weiboContent;
     }
@@ -35,13 +82,6 @@ public class SpiderWeboInfo {
         this.weiboContent = weiboContent;
     }
 
-    public String getSpiderWeboInfocol() {
-        return spiderWeboInfocol;
-    }
-
-    public void setSpiderWeboInfocol(String spiderWeboInfocol) {
-        this.spiderWeboInfocol = spiderWeboInfocol;
-    }
 
     public double getNumberForward() {
         return numberForward;
