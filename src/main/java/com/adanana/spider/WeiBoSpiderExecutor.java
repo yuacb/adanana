@@ -22,13 +22,6 @@ public class WeiBoSpiderExecutor  {
 
     public void executorSpiderThread() throws InterruptedException {
         WeiBoSpiderThread weiBoSpiderThread =new WeiBoSpiderThread();
-//        int corePoolSize = 1;
-//        int maximumPoolSize = 3;
-//        long keepAliveTime = 30;
-
-        CandidateQueue.offer("3920678482");
-        // p c
-        WeiboURLTool.mapAdd("3920678482","ROOT");
         //递交第一个线程
         weiboSpiderTreadPool.submit(weiBoSpiderThread);
 

@@ -14,11 +14,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class ScheduledTheradTask {
     @Resource
     private ThreadPoolExecutor weiboSpiderTreadPool;
-
+    @Resource
+    private WeiBoSpiderThread weiBoSpiderThread;
     @Scheduled(cron="0/10 * *  * * ? ")   //每10
     public void task(){
         System.out.println("定时 提交线程");
-        WeiBoSpiderThread weiBoSpiderThread =new WeiBoSpiderThread();
         weiboSpiderTreadPool.submit(weiBoSpiderThread);
     }
 

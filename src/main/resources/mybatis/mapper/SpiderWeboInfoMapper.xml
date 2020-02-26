@@ -27,7 +27,7 @@
              #{item.numberPraised},
              #{item.repeatInfo},
              #{item.feedTime},
-             #{item.createTime},)
+             #{item.createTime})
         </foreach>
     </insert>
 

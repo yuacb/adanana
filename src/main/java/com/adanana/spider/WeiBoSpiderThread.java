@@ -8,7 +8,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,6 +22,7 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 @Component
+@Scope(value = "prototype")
 public class WeiBoSpiderThread implements Runnable {
     @Resource
     private RedisTemplate redisTemplate;
@@ -33,11 +36,12 @@ public class WeiBoSpiderThread implements Runnable {
             //没有就算了.....
             return;
         }
+        System.out.println("当前线程:"+Thread.currentThread().getName());
+        System.out.println("当前目标用户:"+userId);
         getInfo(userId);
     }
 
     public void getInfo(String userId){
-        System.out.println("当前线程"+Thread.currentThread().getName());
         String weiboUrl = BASE_URL+userId+"?profile_ftype=1&is_all=1";
         try {
             //这个是首页的  html
@@ -49,14 +53,17 @@ public class WeiBoSpiderThread implements Runnable {
             String loopHTMLString;
             String pageHtmlUrl;
             String barHtmlUrl;
+
             while (next)
             {
+                System.out.println(String.format("当前用户：%s , 当前页数 %s" ,userId,page));
                 String feedListHTml = getHtmlDoc(HTMLString);
                 next = getFeedListContent(feedListHTml,userId);
                 //两次滚轮
                 //滚轮 的URL
                 while(pagebar<=1)
                 {
+                    System.out.println(String.format("当前用户：%s , 当前页数 %s , 当前滚轮 %s" ,userId,page,pagebar));
                     barHtmlUrl = WeiboURLTool.getBarURL(userId, pagebar, page);
                     loopHTMLString = getConnectionResponse(barHtmlUrl,"application/x-www-form-urlencoded","*/*");
                     //去掉没用的东西
@@ -72,7 +79,6 @@ public class WeiBoSpiderThread implements Runnable {
                 pageHtmlUrl =WeiboURLTool.getPageURL(BASE_URL,userId,page);
                 HTMLString = getConnectionResponse(pageHtmlUrl,null,"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
             }
-
         } catch (IOException | NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -106,8 +112,8 @@ public class WeiBoSpiderThread implements Runnable {
         connection.setUseCaches(false);
 
         int code = connection.getResponseCode();
-        System.out.println("返回码" + code );
-        System.out.println("编码" + connection.getContentType());
+//        System.out.println("返回码" + code );
+//        System.out.println("编码" + connection.getContentType());
 
         StringBuilder sbHTML = new StringBuilder();
         String HTMLString = "";
@@ -124,7 +130,7 @@ public class WeiBoSpiderThread implements Runnable {
             }
         }
         connection.disconnect();
-        System.out.println(HTMLString);
+//        System.out.println(HTMLString);
         return HTMLString;
     }
 
@@ -158,6 +164,7 @@ public class WeiBoSpiderThread implements Runnable {
      */
     public boolean getFeedListContent(String feedListHTml,String userId) throws IOException, NoSuchFieldException, IllegalAccessException {
         SpiderWeboInfo spiderWeboInfo = new SpiderWeboInfo();
+        SetOperations setOperations = redisTemplate.opsForSet();
         //这个是 一条微博的ID
         String weiboFeedId="";
         //这个用来计数的 评论 点赞 等的数量
@@ -196,7 +203,7 @@ public class WeiBoSpiderThread implements Runnable {
                 field.setAccessible(true);
                 field.set(spiderWeboInfo,count);
             }
-             weiboFeedId = o .attr("mid");
+             weiboFeedId = o.attr("mid");
             //这里好像抓不完所有评论 以后再说
             if( spiderWeboInfo.getNumberRepeat() > 0 ){
                 //这里有评论ID
@@ -214,13 +221,22 @@ public class WeiBoSpiderThread implements Runnable {
                         continue;
                     }
                     String repeaUserId = usercardElemt.get(0).attr("usercard").substring(3);
-                    //放进队列里 重复的就不要了
-                    if(WeiboURLTool.containsKey(repeaUserId)){
-                        WeiboURLTool.mapAdd(repeaUserId,userId);
+                    String setElement = String.format("%s@%s",repeaUserId,userId);
+                    //放进set里 重复的就不要了
+                    synchronized (this){
+                    if(!setOperations.isMember("targetUser",repeaUserId)){
+                        System.out.println(String.format("线程%s,添加用户%s",Thread.currentThread().getName(),repeaUserId));
+                        //存下一个目标
+                        setOperations.add("targetUser",repeaUserId);
+                        //存关系
+                        setOperations.add("targetUserRelationship",setElement);
                         CandidateQueue.offer(repeaUserId);
+                        }
                     }
                 }
             }
+            //用户ID
+            spiderWeboInfo.setWeiboUserId(userId);
             //column 微博的ID
             spiderWeboInfo.setWeiboFeelId(weiboFeedId);
             //column 昵称

@@ -1,10 +1,11 @@
 package com.adanana.spider.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SpiderWeboInfo {
+public class SpiderWeboInfo implements Serializable {
     private Long id;
     private String weiboUserId;
     private String weiboUserNickName;

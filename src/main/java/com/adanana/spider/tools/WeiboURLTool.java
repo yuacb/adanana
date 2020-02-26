@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class WeiboURLTool {
     //这里存的是 用户关系  父 子 关系 感觉会..爆表...
+    //这个不要了 放redis 里
     private static ConcurrentMap curMap = new ConcurrentHashMap<String,String>();
 
     public static void mapAdd(String k,String v){
@@ -90,7 +91,8 @@ public class WeiboURLTool {
                 + "page=%s&"
                 + "ajaxpagelet=1&"
                 + "ajaxpagelet_v6=1";
-        return  String.format(pageUrl,pageUrl,baseUrl,userId,page);
+
+        return  String.format(pageUrl,baseUrl,userId,page);
     }
     /**
      * 获取滚轮 Url
@@ -113,8 +115,9 @@ public class WeiboURLTool {
     }
     //cookie 要拼时间戳
     public static String buildCookie(Long time){
-        String cookie ="UOR=ent.ifeng.com,widget.weibo.com,login.sina.com.cn; SINAGLOBAL=6230222730885.48.1560012855202; ULV=1582514470742:9:4:1:4306858346535.7715.1582514470740:1582191061715; SUHB=010GcjT9retXYy; webim_unReadCount=%7B%22time%22%3A"+time+"%2C%22dm_pub_total%22%3A1%2C%22chat_group_client%22%3A0%2C%22allcountNum%22%3A29%2C%22msgbox%22%3A0%7D; SCF=AohfTVxWDK4GkWhnzs-2sU6u0NhkZZ8VpWU6KboEZpM80m2VxqwJ1zo9HzfKS85s4cA3hxuCOVbq8bRTy9WYwdQ.; un=17398058890; wvr=6; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFQCNsWIRPqXDTOvvfy0oE25JpX5KzhUgL.FoM01K-NShqpeKn2dJLoIEXLxKqL1KMLBK5LxK-LBo5LB.BLxKML1-2L1hBLxKML1-eLB.2LxKqL1-eL1-zt; wb_view_log_7395746118=1536*8641.25; YF-Page-G0=ae24d9a5389d566d388790f1c25a266b|1582514469|1582514448; SUB=_2A25zVzFODeRhGeFN4lcW9CjNyjSIHXVQJSWGrDV8PUNbmtAfLW3SkW9NQ6ZqFQQhgLXFvXNVg7mtSWALCiw7bAMK; ALF=1614050455; SSOLoginState=1582514462; _s_tentry=login.sina.com.cn; Apache=4306858346535.7715.1582514470740; YF-V5-G0=8c1ea32ec7cf68ca3a1513783c276b8c";
-                //固定值
+        String cookie = "UOR=ent.ifeng.com,widget.weibo.com,login.sina.com.cn; SINAGLOBAL=6230222730885.48.1560012855202; ULV=1582514470742:9:4:1:4306858346535.7715.1582514470740:1582191061715; SUHB=09P9_NepijlC5i; webim_unReadCount=%7B%22time%22%3A"+time+"%2C%22dm_pub_total%22%3A1%2C%22chat_group_client%22%3A0%2C%22allcountNum%22%3A37%2C%22msgbox%22%3A0%7D; SCF=AohfTVxWDK4GkWhnzs-2sU6u0NhkZZ8VpWU6KboEZpM82A4etsdCSvn_FCBTteiq8bNd2ewEfIu8RRA4GE-y4us.; un=17398058890; wvr=6; ALF=1614245375; YF-Page-G0=451b3eb7a5a4008f8b81de1fcc8cf90e|1582709382|1582709373; SSOLoginState=1582514462; _s_tentry=login.sina.com.cn; Apache=4306858346535.7715.1582514470740; YF-V5-G0=8c1ea32ec7cf68ca3a1513783c276b8c; Ugrow-G0=d52660735d1ea4ed313e0beb68c05fc5; WBtopGlobal_register_version=307744aa77dd5677; SUB=_2A25zUkrVDeRhGeFN4lcW9CjNyjSIHXVQJjsdrDV8PUNbmtAfLWz_kW9NQ6ZqFSfpwCiycTh_lKpMM245o1w9C_Ez; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFQCNsWIRPqXDTOvvfy0oE25JpX5KMhUgL.FoM01K-NShqpeKn2dJLoIEXLxKqL1KMLBK5LxK-LBo5LB.BLxKML1-2L1hBLxKML1-eLB.2LxKqL1-eL1-zt";
+
+        //固定值
 //                "UOR=ent.ifeng.com,widget.weibo.com,login.sina.com.cn;" +
 //                        " SUB=_2A25zVByNDeRhGeFN4lcW9CjNyjSIHXVQIAlFrDV8PUJbmtAfLUGgkW9NQ6ZqFW1VHd61DCuHGgynVdTePLMc11ce;" +
 //                        " SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WFQCNsWIRPqXDTOvvfy0oE25JpX5K2hUgL.FoM01K-NShqpeKn2dJLoIEXLxKqL1KMLBK5LxK-LBo5LB.BLxKML1-2L1hBLxKML1-eLB.2LxKqL1-eL1-zt;" +
