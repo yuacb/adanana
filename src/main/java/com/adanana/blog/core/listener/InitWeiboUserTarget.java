@@ -18,6 +18,7 @@ public class InitWeiboUserTarget implements org.springframework.context.Applicat
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
             System.out.println("==========================启动 加载用户==================================");
             if(CandidateQueue.size() == 0){
+                //FIXME 这个 应该往数据库里面找；
                 CandidateQueue.offer("3920678482");
                 //这个存 已经查询的 用户
                 redisTemplate.opsForSet().add("targetUser","3920678482");

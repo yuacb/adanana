@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SpiderWeboInfo implements Serializable {
+public class SpiderWeiboInfo implements Serializable {
     private Long id;
     private String weiboUserId;
     private String weiboUserNickName;

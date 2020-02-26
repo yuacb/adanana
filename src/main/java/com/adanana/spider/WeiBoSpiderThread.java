@@ -1,6 +1,6 @@
 package com.adanana.spider;
 
-import com.adanana.spider.model.SpiderWeboInfo;
+import com.adanana.spider.model.SpiderWeiboInfo;
 import com.adanana.spider.tools.CandidateQueue;
 import com.adanana.spider.tools.WeiBoEnum;
 import com.adanana.spider.tools.WeiboURLTool;
@@ -28,8 +28,11 @@ public class WeiBoSpiderThread implements Runnable {
     private RedisTemplate redisTemplate;
     private static final String TAG_SCRIPT = "script";
     private static final String BASE_URL = "https://weibo.com/u/";
+    private ThreadLocal<Integer> indexLocal = new ThreadLocal<Integer>();
+
     @Override
     public void run() {
+        indexLocal.set(0);
         String userId = CandidateQueue.poll(1l, TimeUnit.MINUTES);
         if(userId == null)
         {
@@ -39,6 +42,11 @@ public class WeiBoSpiderThread implements Runnable {
         System.out.println("当前线程:"+Thread.currentThread().getName());
         System.out.println("当前目标用户:"+userId);
         getInfo(userId);
+        //到这就结束了 改状态
+        redisTemplate.opsForHash().put("targetUser@"+userId,"status","1");
+        //额...这是 已经 依然 读完了的用户 放到 这个list 里
+        redisTemplate.opsForList().rightPush("completeUserList", redisTemplate.opsForHash().entries("targetUser@"+userId));
+
     }
 
     public void getInfo(String userId){
@@ -163,7 +171,7 @@ public class WeiBoSpiderThread implements Runnable {
      * @throws IOException
      */
     public boolean getFeedListContent(String feedListHTml,String userId) throws IOException, NoSuchFieldException, IllegalAccessException {
-        SpiderWeboInfo spiderWeboInfo = new SpiderWeboInfo();
+        SpiderWeiboInfo spiderWeiboInfo = new SpiderWeiboInfo();
         SetOperations setOperations = redisTemplate.opsForSet();
         //这个是 一条微博的ID
         String weiboFeedId="";
@@ -199,13 +207,13 @@ public class WeiBoSpiderThread implements Runnable {
                 }else{
                     count=Integer.valueOf(elementForSelf.text());
                 }
-                Field field = SpiderWeboInfo.class.getDeclaredField(oEnum.getFieldName());
+                Field field = SpiderWeiboInfo.class.getDeclaredField(oEnum.getFieldName());
                 field.setAccessible(true);
-                field.set(spiderWeboInfo,count);
+                field.set(spiderWeiboInfo,count);
             }
              weiboFeedId = o.attr("mid");
             //这里好像抓不完所有评论 以后再说
-            if( spiderWeboInfo.getNumberRepeat() > 0 ){
+            if( spiderWeiboInfo.getNumberRepeat() > 0 ){
                 //这里有评论ID
                 String repeatURL = WeiboURLTool.getRepeatURL(weiboFeedId);
                 String repeatHTML = getConnectionResponse(repeatURL,"application/x-www-form-urlencoded","*/*");
@@ -228,26 +236,45 @@ public class WeiBoSpiderThread implements Runnable {
                         System.out.println(String.format("线程%s,添加用户%s",Thread.currentThread().getName(),repeaUserId));
                         //存下一个目标
                         setOperations.add("targetUser",repeaUserId);
-                        //存关系
-                        setOperations.add("targetUserRelationship",setElement);
+
                         CandidateQueue.offer(repeaUserId);
+                        //头大改了好几次了
+                        //目标用户的信息
+                        /**
+                         *  还是 redis吧
+                         *  key targetUser@id
+                         *  p v
+                         */
+                        redisTemplate.opsForHash().put("targetUser@"+repeaUserId,"weiboUserId",repeaUserId);
+                        redisTemplate.opsForHash().put("targetUser@"+repeaUserId,"refUser",userId);
+                        redisTemplate.opsForHash().put("targetUser@"+repeaUserId,"status","0");
                         }
                     }
                 }
             }
-            //用户ID
-            spiderWeboInfo.setWeiboUserId(userId);
-            //column 微博的ID
-            spiderWeboInfo.setWeiboFeelId(weiboFeedId);
-            //column 昵称
-            spiderWeboInfo.setWeiboUserNickName( o.select("div[node-type='feed_list_content']").get(0).attr("nick-name"));
-            //column 这里是一条微博 内容
-            spiderWeboInfo.setWeiboContent(o.select("div[node-type='feed_list_content']").get(0).text());
-            //column 发布时间 node-type="feed_list_item_date"
-            spiderWeboInfo.setFeedTime(o.select("a[node-type='feed_list_item_date']").get(0).attr("title"));
-            //redis
-            redisTemplate.opsForList().leftPush("spiderWeboInfoList",spiderWeboInfo);
 
+//==========存  spiderWeiboUserTarget    =============================================================
+ //额 想了下 不能在这里存
+//==========存  spiderWeiboInfo    =============================================================
+
+            //用户ID
+            spiderWeiboInfo.setWeiboUserId(userId);
+            //column 微博的ID
+            spiderWeiboInfo.setWeiboFeelId(weiboFeedId);
+            //column 昵称
+            spiderWeiboInfo.setWeiboUserNickName( o.select("div[node-type='feed_list_content']").get(0).attr("nick-name"));
+            //column 这里是一条微博 内容
+            spiderWeiboInfo.setWeiboContent(o.select("div[node-type='feed_list_content']").get(0).text());
+            //column 发布时间 node-type="feed_list_item_date"
+            spiderWeiboInfo.setFeedTime(o.select("a[node-type='feed_list_item_date']").get(0).attr("title"));
+            //redis
+            redisTemplate.opsForList().leftPush("spiderWeboInfoList", spiderWeiboInfo);
+            //一次就够了
+            if(indexLocal.get()==0)
+            {
+                redisTemplate.opsForHash().put("targetUser@"+userId,"weiboUserNickName",spiderWeiboInfo.getWeiboUserNickName());
+                indexLocal.set(1);
+            }
         }
         return true;
     }
