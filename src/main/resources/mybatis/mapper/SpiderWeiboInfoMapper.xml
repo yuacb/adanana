@@ -3,7 +3,7 @@
 <mapper namespace="com.adanana.blog.dao.SpiderWeiboInfoMapper">
 
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into spider_webo_info (
+        insert into spider_weibo_info (
         `weibo_user_id`,
         `weibo_user_nick_name`,
         `weibo_feed_id`,

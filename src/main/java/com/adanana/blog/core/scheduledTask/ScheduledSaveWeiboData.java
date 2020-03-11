@@ -1,5 +1,6 @@
 package com.adanana.blog.core.scheduledTask;
 
+import com.adanana.blog.core.Constant;
 import com.adanana.blog.service.SpiderWeiboInfoService;
 import com.adanana.spider.model.SpiderWeiboInfo;
 import org.springframework.data.redis.core.ListOperations;
@@ -19,6 +20,10 @@ public class ScheduledSaveWeiboData {
     private static  final int MAX =200;
     @Scheduled(cron="0/10 * *  * * ? ")   //每10
     public void task(){
+        if(Constant.SPIDER_SWITCH.equals(Constant.SPIDER_OFF))
+        {
+            return;
+        }
         System.out.println("执行了 数据库的 定时");
         ListOperations<String, SpiderWeiboInfo> listOperations = redisTemplate.opsForList();
         Long spiderWeboInfoListSize = listOperations.size("spiderWeboInfoList");

@@ -1,12 +1,10 @@
 package com.adanana.blog.core.scheduledTask;
 
+import com.adanana.blog.core.Constant;
 import com.adanana.blog.service.SpiderWeiboTargetUserService;
-import com.adanana.spider.model.SpiderWeiboInfo;
 import com.adanana.spider.model.SpiderWeiboTargetUser;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +21,13 @@ public class ScheduledSaveTargetUser {
     @Resource
     private SpiderWeiboTargetUserService spiderWeiboTargetUserService;
 
-    private static final int MAX =200;
+    private static final int MAX =1;
     @Scheduled(cron="0/50 * *  * * ? ")   //每10
     public void task() throws NoSuchFieldException, IllegalAccessException {
+        if(Constant.SPIDER_SWITCH.equals(Constant.SPIDER_OFF))
+        {
+            return;
+        }
         ListOperations listOperations = redisTemplate.opsForList();
         if( listOperations.size("completeUserList")<MAX){
             return;
@@ -37,14 +39,15 @@ public class ScheduledSaveTargetUser {
         List<Map<String,String>> objectMapList = listOperations.range("completeUserList",0,-1);
         for(Map<String,String> objectMap :objectMapList)
         {
+            spiderWeiboTargetUser = new SpiderWeiboTargetUser();
             //构造对象
             for(Map.Entry<String,String>  object :objectMap.entrySet()){
-                spiderWeiboTargetUser = new SpiderWeiboTargetUser();
                 Field field = spiderWeiboTargetUserClass.getDeclaredField(object.getKey());
                 field.setAccessible(true);
                 if("status".equals(object.getKey()))
                 {
                     field.set(spiderWeiboTargetUser,Integer.valueOf(object.getValue()));
+                    continue;
                 }
                 field.set(spiderWeiboTargetUser,object.getValue());
             }

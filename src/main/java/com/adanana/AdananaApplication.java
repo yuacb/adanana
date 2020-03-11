@@ -17,7 +17,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class AdananaApplication extends SpringBootServletInitializer {
-
 	public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication(AdananaApplication.class);
 		springApplication.addListeners(new InitWeiboUserTarget());

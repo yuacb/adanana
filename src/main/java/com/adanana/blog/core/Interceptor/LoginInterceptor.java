@@ -24,6 +24,10 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        if(true){
+            return true;
+        }
+
         //由于跨域的问题...放行OPTIONS
         if("OPTIONS".equals(request.getMethod().toUpperCase())) {
             return true;

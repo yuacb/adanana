@@ -3,7 +3,7 @@
 <mapper namespace="com.adanana.blog.dao.SpiderWeiboTargetUserMapper">
 
     <insert id="batchInsert" parameterType="java.util.List">
-        insert into spider_webo_info
+        insert into spider_weibo_user_target
          (`weibo_user_id`,
         `weibo_user_nick_name`,
         `status`,
@@ -11,11 +11,11 @@
         `remarks`)
         values
         <foreach item="item" collection="list" separator=",">
-            ( #{item.weibo_user_id},
-            #{item.weibo_user_nick_name},
+            ( #{item.weiboUserId},
+            #{item.weiboUserNickName},
             #{item.status},
-            #{item.ref_user},
-            #{item.remarks},
+            #{item.refUser},
+            #{item.remarks})
         </foreach>
     </insert>
 

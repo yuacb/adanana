@@ -40,13 +40,12 @@ public class WeiBoSpiderThread implements Runnable {
             return;
         }
         System.out.println("当前线程:"+Thread.currentThread().getName());
-        System.out.println("当前目标用户:"+userId);
         getInfo(userId);
         //到这就结束了 改状态
         redisTemplate.opsForHash().put("targetUser@"+userId,"status","1");
         //额...这是 已经 依然 读完了的用户 放到 这个list 里
         redisTemplate.opsForList().rightPush("completeUserList", redisTemplate.opsForHash().entries("targetUser@"+userId));
-
+        System.out.println("当前线程:"+Thread.currentThread().getName()+"结束");
     }
 
     public void getInfo(String userId){
@@ -71,7 +70,6 @@ public class WeiBoSpiderThread implements Runnable {
                 //滚轮 的URL
                 while(pagebar<=1)
                 {
-                    System.out.println(String.format("当前用户：%s , 当前页数 %s , 当前滚轮 %s" ,userId,page,pagebar));
                     barHtmlUrl = WeiboURLTool.getBarURL(userId, pagebar, page);
                     loopHTMLString = getConnectionResponse(barHtmlUrl,"application/x-www-form-urlencoded","*/*");
                     //去掉没用的东西
@@ -99,7 +97,6 @@ public class WeiBoSpiderThread implements Runnable {
      */
     public String getConnectionResponse(String urlStr,String contentType,String accept) throws IOException {
         URL url = new URL(urlStr);
-        System.out.println("访问地址"+urlStr);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("GET");

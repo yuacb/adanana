@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -18,11 +19,9 @@ import java.util.Date;
 // @RestController json 返回
 @Controller
 public class IndexController extends  BaseController {
-     @Autowired
-     private StringRedisTemplate stringRedisTemplate;
-     @Autowired
+     @Resource
      private RedisTemplate redisTemplate;
-     @Autowired
+     @Resource
      private UserService userService;
 
     /**
@@ -30,13 +29,12 @@ public class IndexController extends  BaseController {
      */
      @RequestMapping(value ="/register", method = RequestMethod.POST)
      @ResponseBody
-     public String register(User user){
+     public Object register(@RequestBody User user){
          user.setRegisteredTime(new Date());
          userService.insert(user);
          //存入redis
-         return JSON.toJSONString("success") ;
+         return ResponseObject.success() ;
      }
-
      /**
       * 登陆
       */
@@ -46,7 +44,6 @@ public class IndexController extends  BaseController {
          HttpSession httpSession = request.getSession(true);
          ValueOperations<String, User> operations=redisTemplate.opsForValue();
          User user = userService.userLogin(loginUser);
-
          if(!(null == user))
          {   operations.set("sessionId@"+httpSession.getId(),user);
              return  ResponseObject.success(user);
@@ -65,28 +62,6 @@ public class IndexController extends  BaseController {
      }
 
 
-
-//
-//    @RequestMapping("/upload")
-//    public String upload(@RequestParam("file") MultipartFile file){
-//        List<ShStockeXchange> shStockeXchangeList = new ArrayList<ShStockeXchange>();
-//        StringBuilder sb = new StringBuilder();
-//        try {
-//            BufferedReader  in = new BufferedReader(new InputStreamReader(file.getInputStream(),"gb2312"));
-//            while ((in.readLine()) != null)
-//            {
-//                String[] values = in.readLine().replaceAll("\\[", "").split(",");
-//                shStockeXchangeList.add(shStockeXchangeService.getBeanField(values));
-//            }
-//            in.close();
-//         } catch (IOException e) {
-//            e.printStackTrace();
-//        }finally {
-//        }
-//        //存到数据库
-//
-//        return "index.html";
-//    }
 }
 
  
